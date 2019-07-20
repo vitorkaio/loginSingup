@@ -5,7 +5,6 @@ import Register from './register/Register.jsx';
 import ErrorServer from 'pages/err/Error.jsx';
 
 const AuthRouter = () => {
-  console.log('Auth router');
   return (
     <Switch>
       <Route exact path='/auth/login' component={Login} />
