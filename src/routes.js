@@ -1,7 +1,6 @@
 import React from 'react'
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 
-import LoginRouter from 'pages/login/LoginRouter.jsx';
 import AuthRouter from 'pages/auth/AuthRouter.jsx';
 import HomeRouter from 'pages/home/HomeRouter.jsx';
 import ErrorServer from 'pages/err/Error.jsx';
@@ -11,11 +10,10 @@ import ErrorServer from 'pages/err/Error.jsx';
 const Routes = () => (
   <BrowserRouter>
     <Switch>
-      <Route path='/' exact={true} component={LoginRouter}/>
       <Route path='/auth' component={AuthRouter}/>
-      <Route path='/home' component={HomeRouter}/>
+      <Route exact path='/home' component={HomeRouter}/>
+      <Route exact path="/" render={() => <Redirect to="/auth/login" />} />
       <Route path='*' component={ErrorServer}/>
-      <Redirect to="/" component={LoginRouter} />
     </Switch>
   </BrowserRouter>
 )
