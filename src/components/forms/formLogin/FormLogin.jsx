@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import { FormLoginCss } from './FormLoginStyled';
-import NameFormData from './nameFormData/NameFormData.jsx';
+import LoginFormData from './loginFormData/LoginFormData.jsx';
 
 const FormLogin = () => {
 
-  const [name, setName] = useState('');
+  const [login, setLogin] = useState('');
 
-  const nameInputHandler = (data) => {
-    setName(data);
-    console.log(name);
+  const loginInputHandler = (data) => {
+    setLogin(data);
   }
 
   return (
     <FormLoginCss>
       <h3>Form Login</h3>
-      <NameFormData nameData={nameInputHandler} />
+      <LoginFormData loginData={loginInputHandler} />
+      <span>{login}</span>
     </FormLoginCss>
   );
 };
