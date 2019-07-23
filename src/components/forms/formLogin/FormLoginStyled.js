@@ -15,4 +15,12 @@ export const FormLoginCss = styled.form`
 export const FormLoginDataCss = styled.div`
   margin: 1rem 0;
   width: 300px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & :last-child {
+    margin-left: 0.5rem;
+  }
 `;

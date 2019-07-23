@@ -5,7 +5,7 @@ import PasswordFormData from './passwordFormData/PasswordFormData.jsx';
 import { loginRequiredError } from './Validators';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faLock } from '@fortawesome/free-solid-svg-icons';
 
 const FormLogin = () => {
 
@@ -51,13 +51,14 @@ const FormLogin = () => {
       <h3>Form Login</h3>
       
       <FormLoginDataCss>
-        <FontAwesomeIcon icon={faUser} />
+        <FontAwesomeIcon icon={faUser} size='2x' />
         <LoginFormData login={login.value} loginData={loginInputHandler} error={login.error.value}/>
       </FormLoginDataCss>
       
       { login.error.value ? <span>{login.error.msg}</span> : null }
 
       <FormLoginDataCss>
+        <FontAwesomeIcon icon={faLock} size='2x' />
         <PasswordFormData login={password.value} passwordData={passwordInputHandler} error={password.error.value}/>
       </FormLoginDataCss>
       

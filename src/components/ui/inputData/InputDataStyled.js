@@ -11,7 +11,7 @@ export const InputDataCss = styled.input`
   width: ${props => props.width};
 
   &:focus {
-    border-color: ${props => props.error ? ErrorColor : PrimaryColor};
+    border-color: ${props => props.error ? ErrorColor : 'cornflowerblue'};
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
   }
 `;
