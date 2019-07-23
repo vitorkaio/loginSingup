@@ -1,5 +1,5 @@
 
-export const requiredLogin = {
+export const loginRequiredError = {
   value: 0,
   msg: `O login é obrigatório`,
   test: (login) => {
