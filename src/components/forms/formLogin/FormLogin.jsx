@@ -1,69 +1,113 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { FormLoginCss, FormLoginDataCss } from './FormLoginStyled';
-import LoginFormData from './loginFormData/LoginFormData.jsx';
-import PasswordFormData from './passwordFormData/PasswordFormData.jsx';
-import { loginRequiredError } from './Validators';
-
+import { validateLogin, validatePassword } from './Validators';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faLock } from '@fortawesome/free-solid-svg-icons';
+import { produce } from 'immer';
+
+import InputData from 'components/ui/inputData/InputData.jsx';
+
 
 const FormLogin = () => {
 
-  const [login, setLogin] = useState({
-    value: '',
-    error: {
-      value: false,
-      msg: ''
-  }});
-
-  const [password, setPassword] = useState({
-    value: '',
-    error: {
-      value: false,
-      msg: ''
-  }});
-
-  const loginInputHandler = (data) => {
-    setLogin({...login, value: data, error: {value: false}});
-  }
-
-  const passwordInputHandler = (data) => {
-    setPassword({...password, value: data, error: {value: false}});
-  }
-
-  const submit = (event) => {
-    if (loginRequiredError.test(login.value)) {
-      setLogin({
-        ...login,
-        error: {
-          value: true,
-          msg: loginRequiredError.msg
-        }
-      });
+  const [control, setControl] = useState({
+    login: {
+      value: '',
+      touch: false,
+      isValid: {
+        error: false,
+        msg: '',
+        validate: validateLogin
+      }
+    },
+    password: {
+      value: '',
+      touch: false,
+      isValid: {
+        error: false,
+        msg: '',
+        validate: validatePassword
+      }
     }
+  })
+
+  const validateForm = useCallback((submit) => {
+    setControl(produce(control, draft => {
+      for (let item in control) {
+        if (submit) draft[item].touch = true
+        if (control[item].touch) {
+          const res = draft[item].isValid.validate(control[item].value)
+          if (res) {
+            draft[item].isValid.error = true
+            draft[item].isValid.msg = res
+          }
+          else {
+            draft[item].isValid.error = false
+            draft[item].isValid.msg = ''
+          }
+        }
+      }
+    }))
+  }, [control])
+
+  useEffect(() => {
+    validateForm(false)
+    console.log(control)
+  }, [control, validateForm])
+
+  const controlInputHandler = (data, type) => {
+    setControl(produce(control, draft => {
+      draft[type].value = data
+    }));  
+  }
+
+  const onBlurHandler = (type) => {
+    setControl(produce(control, draft => {
+      draft[type].touch = true
+    }))
+  }
+
+  const handlerSubmit = (event) => {
+    validateForm(true)
     event.preventDefault()
   }
 
-  console.log('Render');
-
   return (
-    <FormLoginCss onSubmit={submit}>
+    <FormLoginCss onSubmit={handlerSubmit}>
       <h3>Form Login</h3>
       
       <FormLoginDataCss>
         <FontAwesomeIcon icon={faUser} size='2x' />
-        <LoginFormData login={login.value} loginData={loginInputHandler} error={login.error.value}/>
+        <InputData
+          onBlur={() => onBlurHandler('login')}
+          type='text' 
+          name='login'
+          placeholder='Login'
+          value={control.login.value} 
+          onChange={(e) => controlInputHandler(e.target.value, 'login')}
+          width={'100%'}
+          error={control.login.isValid.error}
+        />
       </FormLoginDataCss>
-      
-      { login.error.value ? <span>{login.error.msg}</span> : null }
+
+      {control.login.isValid.error && <span>{control.login.isValid.msg}</span>}
 
       <FormLoginDataCss>
         <FontAwesomeIcon icon={faLock} size='2x' />
-        <PasswordFormData login={password.value} passwordData={passwordInputHandler} error={password.error.value}/>
+        <InputData
+          onBlur={() => onBlurHandler('password')}
+          type='password' 
+          name='password'
+          placeholder='Senha'
+          value={control.password.value} 
+          onChange={(e) => controlInputHandler(e.target.value, 'password')}
+          width={'100%'}
+          error={control.password.isValid.error}
+        />
       </FormLoginDataCss>
-      
-      { password.error.value ? <span>{password.error.msg}</span> : null }
 
+      {control.password.isValid.error && <span>{control.password.isValid.msg}</span>}
+      
       <input type="submit" value="Enviar" />
     </FormLoginCss>
   );
